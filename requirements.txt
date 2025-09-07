@@ -1,0 +1,13 @@
+Django>=5.0
+# torch
+# transformers>=4.41.0
+sentence-transformers>=2.4.0
+pydantic
+python-dotenv
+pymongo[srv]
+psycopg2-binary
+pgvector
+#django-pgvector>=0.2.3
+pgvector
+openai
+uvicorn

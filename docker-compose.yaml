@@ -1,0 +1,48 @@
+version: '3.9'
+services:
+  web:
+    build: 
+      context: .
+    image: sarvban_agent-web:version2.0
+    container_name: sarvban_web
+    working_dir: /app
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+      - postgres
+    networks:
+      - sarvban_net
+
+  mongo:
+    image: mongo:6.0
+    container_name: sarvban_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: sarvban
+    networks:
+      - sarvban_net
+
+  postgres:
+    image: ankane/pgvector
+    container_name: sarvban_postgres
+    restart: always
+    ports:
+      - "5400:5432"
+    environment:
+      POSTGRES_DB: sarvban
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - sarvban_net
+
+networks:
+  sarvban_net:
+    driver: bridge
