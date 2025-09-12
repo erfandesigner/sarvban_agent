@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Box UI Design</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css'>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div  class="chat-box">
+	<div class="chat-box-header">
+		 	<h3>سروناز ;دستیار فروش</h3>
+			<p>
+				<i class="fa fa-times"></i>	
+			</p>
+	</div>
+	<div class="chat-box-body">
+		{% comment %} <div class="chat-box-body-send">
+			<p>This is my message.</p>
+			<span>12:00</span>
+		</div>
+		<div class="chat-box-body-receive">
+			<p>This is my message.</p>
+			<span>12:00</span>
+		</div> {% endcomment %}
+
+	</div>
+	<div class="chat-box-footer">
+			<button id="addExtra">
+				<i class="fa fa-plus"></i>	
+			</button>
+			<input placeholder="چه کمکی لازم دارید؟" type="text">
+			<i class="send far fa-paper-plane"></i>
+	</div>
+</div>
+
+
+<div class="chat-button">
+	<span></span>
+</div>
+
+
+<div class="modal">
+        <div class="modal-content">
+            <span class="modal-close-button">&times;</span>
+            <h1>Add What you want here.</h1>
+        </div>
+    </div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+  <script  src="{% static 'script.js' %}"></script>
+
+		
+
+</body>
+</html>

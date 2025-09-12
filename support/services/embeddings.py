@@ -7,6 +7,9 @@ from django.conf import settings
 import os
 from typing import List, Dict, Any
 from django.conf import settings
+from support.forms import RAGFileUploadForm
+from django.shortcuts import render, redirect
+from support.models import RagDocument, hash_chunk
 
 _embeddings_model = None
 
@@ -90,3 +93,66 @@ def embed_texts(folder: str, batch_size: int = 32) -> List[Dict[str, Any]]:
                     })
 
     return results
+
+def createChunk(text : set, path: str, batch_size: int = 32) -> List[Dict[str, Any]]:
+    records: List[Dict[str, Any]] = []
+    model = _load_st_model()
+    chunks = _chunk_text(text)
+    for i in range(0, len(chunks), batch_size):
+        batch = chunks[i:i+batch_size]
+        vecs = model.encode(batch, normalize_embeddings=True).tolist()
+        for chunk, vec in zip(batch, vecs):
+            records.append({
+                "chunk": chunk,
+                "embedding": vec,
+                "metadata": {"source": path, "title": os.path.basename(path)}
+            })
+
+        objs = []
+        file_stats = {}
+        duplicate_count = 0
+        for r in records:
+            source = r["metadata"]["source"]
+            file_stats.setdefault(source, {"chunks": 0, "skipped": 0})
+
+            chunk_hash = hash_chunk(r["chunk"])
+
+            # بررسی تکرار قبل از ذخیره
+            if RagDocument.objects.filter(source_id=source, chunk_hash=chunk_hash).exists():
+                file_stats[source]["skipped"] += 1
+                duplicate_count += 1
+                continue
+
+            file_stats[source]["chunks"] += 1
+            objs.append(
+                RagDocument(
+                    source_id=source,
+                    title=r["metadata"]["title"],
+                    chunk=r["chunk"],
+                    embedding=r["embedding"],
+                    metadata=r["metadata"],
+                    chunk_hash=chunk_hash,
+                )
+            )
+
+        # ذخیره یک‌باره
+        RagDocument.objects.bulk_create(objs, batch_size=200, ignore_conflicts=True)
+
+
+UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'uploaded_files')
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+def rag_upload(request):
+    result = None
+    if request.method == 'POST':
+        form = RAGFileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            f = form.cleaned_data['file']
+            file_path = os.path.join(UPLOAD_DIR, f.name)
+            with open(file_path, 'wb+') as destination:
+                text = f.read().decode('utf-8')
+                result = createChunk(text, file_path)
+            return redirect('rag_upload')
+    else:
+        form = RAGFileUploadForm()
+    return render(request, 'support/rag_upload.html', {'form': form, 'result': result})

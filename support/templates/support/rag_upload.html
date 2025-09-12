@@ -1,0 +1,12 @@
+{% block content %}
+  <h2>آپلود فایل برای RAG</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">ارسال</button>
+  </form>
+  {% if result %}
+    <h3>نتیجه:</h3>
+    <pre>{{ result }}</pre>
+  {% endif %}
+{% endblock %}

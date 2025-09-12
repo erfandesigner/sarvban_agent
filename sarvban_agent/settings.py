@@ -15,6 +15,7 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "insecure")
 DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() == "true"
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",")
 
+INTERNAL_IPS = ["127.0.0.1","localhost"]
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -24,16 +25,19 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "pgvector.django",  # pgvector integration
     "support",
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
 ]
 
 ROOT_URLCONF = "sarvban_agent.urls"
@@ -70,11 +74,14 @@ DATABASES = {
 
 # Static files
 STATIC_URL = "static/"
-
+STATICFILES_DIRS = [
+    os.path.join(Path(__file__).resolve().parent.parent, 'static')
+]
+print("STATICFILES_DIRS:", STATICFILES_DIRS)
 # Mongo
 MONGO_URI = os.environ.get("MONGO_URI")
-MONGO_DB = os.environ.get("MONGO_DB", "sarvban")
-MONGO_PRODUCTS_COLLECTION = os.environ.get("MONGO_PRODUCTS_COLLECTION", "products")
+MONGO_DB = os.environ.get("MONGO_DB", "phalcon")
+MONGO_PRODUCTS_COLLECTION = os.environ.get("MONGO_PRODUCTS_COLLECTION", "adv")
 
 # Embeddings / LLM
 EMBEDDINGS_BACKEND = os.environ.get("EMBEDDINGS_BACKEND", "sentence-transformers")
