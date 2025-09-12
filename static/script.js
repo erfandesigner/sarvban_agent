@@ -1,3 +1,15 @@
+const messages = [
+"کاشت امروز، برداشت مطمئن فردا؛ با سروبان در کنار شما.",
+"امنیت مالی کشاورزان، هدف ما؛ سروبان، همراه همیشگی شما.",
+"سروبان؛ اعتبار شما برای کشت قراردادی و خرید تضمینی!",
+"محصولات شما، تعهد ما. با سروبان، آینده‌ای روشن‌تر بسازید.",
+"حمایت از کشاورزی پایدار؛ سروبان، پلی به سوی موفقیت.",
+"راه‌حل‌های مالی هوشمند برای کشاورزان؛ سروبان، شریک مطمئن شما.",
+"با سروبان، دغدغه مالی را کنار بگذارید و به زمین خود اعتماد کنید.",
+"کشت را به ما بسپارید؛ با تسهیلات سروبان، آینده‌ای سبزتر رقم بزنید.",
+];
+
+
 $('.chat-button').on('click' , function(){
 	$('.chat-button').css({"display": "none"});
 	
@@ -18,7 +30,7 @@ $(".modal-close-button").on("click" , function(){
 	$(".modal").toggleClass("show-modal");
 })
 
-var $waitingDots='<span class="jumping-dots"><span class="dot-1"></span> <span class="dot-2"></span> <span class="dot-3"></span></span>'
+var $waitingDots='<span class="jumping-dots"><div class="randomMessage" id="randomMessage">لطفا صبر کنید...</div><div class="dots"><span class="dot-1"></span> <span class="dot-2"></span> <span class="dot-3"></span></span>'
 var $chatBoxBody = $('.chat-box-body');
 var $chatBoxFooterInput = $('.chat-box-footer input');
 var $sendButton = $('.chat-box-footer .send');
@@ -44,7 +56,8 @@ function sendToBot(message) {
 
 //add waiting dots
 
-$chatBoxBody.append($waitingDots);
+	$chatBoxBody.append($waitingDots);
+	rotateMessage();
 	// Send the message to the server
 	$.ajax({
 		url: '/api/chat',
@@ -164,3 +177,15 @@ function appendMessage(message, isUser) {
 	$chatBoxBody.append($messageDiv);
 	$chatBoxBody.scrollTop($chatBoxBody[0].scrollHeight);
 }
+
+
+
+function rotateMessage() {
+  const msgEl = document.getElementById("randomMessage");
+  const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+  msgEl.textContent = randomMsg;
+}
+
+// Initial message
+
+

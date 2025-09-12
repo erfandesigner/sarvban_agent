@@ -63,9 +63,9 @@ def _llm_complete(messages: list[dict[str, str]]) -> str:
         from openai import OpenAI
         client = OpenAI(base_url="https://api.gapgpt.app/v1",api_key=settings.OPENAI_API_KEY)
         resp = client.chat.completions.create(
-            model=settings.LLM_MODEL,
+            model=settings.CHAT_LLM_MODEL,
             messages=messages,
-            temperature=0.2,
+            temperature=0.5,
             max_tokens=350,
         )
         return resp.choices[0].message.content
@@ -116,7 +116,7 @@ def chat(request: HttpRequest):
     # Tool: product search (for buy intent and also when user mentions a product)
     products = []
     context =''
-    if intent["intent"] != "unknown" or intent["intent"] != "help":
+    if intent["intent"] != "unknown" and intent["intent"] != "help":
         # products = search_products(intent, limit=5)
         products = search_products_by_api(intent, limit=5)
     else:
@@ -137,6 +137,10 @@ def chat(request: HttpRequest):
         {"role": "system", "content": f"قوانین RAG:\n{rag_rules}"},
         ]
     messages.extend(history)
+
+    if context:
+        messages.append({"role": "system", "content": f"اطلاعات کمکی (RAG):\n{context}"})   
+        
 
     user_prompt = (
         f"سوال کاربر: {text}\n\n"

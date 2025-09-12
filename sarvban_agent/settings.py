@@ -89,6 +89,7 @@ EMBEDDINGS_MODEL = os.environ.get("EMBEDDINGS_MODEL", "sentence-transformers/all
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 LLM_BACKEND = os.environ.get("LLM_BACKEND", "openai")
 LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-4o-mini")
+CHAT_LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-4o")
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "http://localhost:8000")
 
 PGVECTOR_DIM = 384 if "MiniLM" in EMBEDDINGS_MODEL else 1536

@@ -97,6 +97,12 @@ body {
   color: #444;
   font-size: 14px;
   margin-bottom: 0.25rem;
+  text-align: right;
+}
+.randomMessage {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #afafaf;
 }
 .chat-box-body-receive span {
   float: right;

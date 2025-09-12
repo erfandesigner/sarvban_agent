@@ -153,6 +153,9 @@ def rag_upload(request):
                 text = f.read().decode('utf-8')
                 result = createChunk(text, file_path)
             return redirect('rag_upload')
+        else:
+            error = form.errors.as_json()
+            return render(request, 'support/rag_upload.html', {'form': form, 'error': error})
     else:
         form = RAGFileUploadForm()
     return render(request, 'support/rag_upload.html', {'form': form, 'result': result})
