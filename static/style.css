@@ -174,12 +174,12 @@ body {
   border-radius: 15px;
 }
 .chat-button span::after {
-  content: "می تونم کمک کنم؟";
-  font-size: 14px;
-  color: white;
-  position: absolute;
-  left: 50px;
-  top: 18px;
+    content: "دستیار فروش";
+    font-size: 14px;
+    color: white;
+    position: absolute;
+    left: 50px;
+    top: 30%;
 }
 
 .modal {
@@ -284,6 +284,19 @@ body {
   40% {
     bottom: 0px;
   }
+}
+
+.bounce {
+  animation: bounce 5s ease infinite;
+}
+@keyframes bounce {
+    70% { transform:translateY(0%); }
+    80% { transform:translateY(-15%); }
+    90% { transform:translateY(0%); }
+    95% { transform:translateY(-7%); }
+    97% { transform:translateY(0%); }
+    99% { transform:translateY(-3%); }
+    100% { transform:translateY(0); }
 }
 @media screen only and (max-width: 450px) {
   .chat-box {
