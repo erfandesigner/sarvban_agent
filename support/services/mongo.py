@@ -36,10 +36,16 @@ def search_products_by_api(query: Dict[str, Any], limit: int = 5) -> List[Dict[s
     if not query.get("product"):
         return []
     
+
+    
     params ={
         "adType":adType,
-        "key":query.get("product"),
-        "page": limit
+        "product":query.get("product"),
+        "page": limit,
+        "kind": query.get("kind",None),
+        "ostan": query.get("province",None),
+        "cat": query.get("cat",None),
+        "info" : query.get("info",None)
     }
     
     resp = requests.post(url, data=params, timeout=300)

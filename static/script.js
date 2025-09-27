@@ -14,6 +14,7 @@ $('.chat-button').on('click' , function(){
 	$('.chat-button').css({"display": "none"});
 	
 	$('.chat-box').css({"visibility": "visible"});
+	appendMessage("سلام من سروناز هستم دستیار فروش سروبان. چه  محصولی مدنظر دارید؟", false);
 });
 
 $('.chat-box .chat-box-header p').on('click' , function(){
@@ -175,7 +176,7 @@ function appendMessage(message, isUser) {
 
 	$messageDiv.append($messageContent).append($timestamp);
 	$chatBoxBody.append($messageDiv);
-	$chatBoxBody.scrollTop($chatBoxBody[0].scrollHeight);
+	// $chatBoxBody.scrollTop($chatBoxBody[0].scrollHeight);
 }
 
 
