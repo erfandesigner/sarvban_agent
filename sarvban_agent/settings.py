@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "pgvector.django",  # pgvector integration
     "support",
+    'rag_agent',
     "debug_toolbar",
 ]
 
@@ -91,5 +92,8 @@ LLM_BACKEND = os.environ.get("LLM_BACKEND", "openai")
 LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-4o-mini")
 CHAT_LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-4o")
 SITE_BASE_URL = os.environ.get("SITE_BASE_URL", "http://localhost:8000")
+MAX_CONTEXT_CHARS = int(os.getenv("MAX_CONTEXT_CHARS", "12000"))
+TOP_K = int(os.getenv("TOP_K", "6"))
+CACHE_TTL = int(os.getenv("CACHE_TTL", "3600"))
 
 PGVECTOR_DIM = 384 if "MiniLM" in EMBEDDINGS_MODEL else 1536
