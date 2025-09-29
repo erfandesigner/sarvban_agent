@@ -9,5 +9,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('__debug__/', include('debug_toolbar.urls')),
     path("api/", include("support.urls")),
+    path("rag/", include("rag_agent.urls")),
     path('rag-upload/', rag_upload, name='rag_upload'),
 ]

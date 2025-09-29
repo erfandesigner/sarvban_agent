@@ -1,14 +1,14 @@
 import json
-from .models import Product
+from .models import Product_rags as Product
 from .embedding import embed_text
 from .filters import apply_filters
 from django.conf import settings
 from openai import OpenAI
+from django.db import models
+import hashlib
+from  pgvector.django import CosineDistance
+import time
 
-llm = OpenAI(
-            base_url="https://api.gapgpt.app/v1",
-            api_key=settings.OPENAI_API_KEY
-)
 ANSWER_CACHE = {}
 
 def _cache_answer(key, val):
@@ -22,9 +22,10 @@ def _get_cached_answer(key):
 
 def retrieve(query, filters):
     emb = embed_text(query)
+    # Assuming 'embedding' is a pgvector field and pgvector is installed
+
     qs = Product.objects.annotate(
-        sim=models.Func(models.F("embedding"), models.Value(emb),
-                        function="<=>", output_field=models.FloatField())
+        sim=CosineDistance('embedding', emb)
     )
     qs = apply_filters(qs, filters or {})
     return qs.order_by("sim")[: settings.TOP_K]
@@ -37,6 +38,8 @@ def build_context(products):
     return ctx[-settings.MAX_CONTEXT_CHARS:]
 
 def answer(query, filters):
+
+    llm = OpenAI(base_url="https://api.gapgpt.app/v1",api_key=settings.OPENAI_API_KEY)
     key = hashlib.sha256(query.encode()).hexdigest()
     cached = _get_cached_answer(key)
     if cached:
@@ -52,6 +55,18 @@ def answer(query, filters):
         messages=[{"role":"user","content":prompt}],
         temperature=0.2
     )
-    out = json.loads(resp.choices[0].message.content)
+    content = resp.choices[0].message.content
+    if content is None:
+        raise ValueError("LLM response content is None")
+    
+    # Remove Markdown code block markers if present
+    if content.strip().startswith("```"):
+        content = content.strip().strip("`")
+        # Remove the first line (e.g., ```json) and the last line (```)
+        lines = content.splitlines()
+        if len(lines) >= 3:
+            content = "".join(lines[1:])  # Include all lines except the first (e.g., ```json)
+    
+    out = json.loads(content)
     _cache_answer(key, out)
     return out

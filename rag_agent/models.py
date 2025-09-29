@@ -1,7 +1,7 @@
 from django.db import models
-from pgvector.fields import VectorField
+from pgvector.django import VectorField
 
-class Product(models.Model):
+class Product_rags(models.Model):
     # your core schema fields
     title        = models.TextField()
     description  = models.TextField(blank=True)
@@ -10,9 +10,9 @@ class Product(models.Model):
     price        = models.JSONField(default=dict)
     export       = models.JSONField(default=dict)
     properties   = models.JSONField(default=dict)
-    created_at   = models.DateTimeField()
+    created_at   = models.DateTimeField(auto_now_add=True)
     # vector embedding
-    embedding    = VectorField(dimensions=1536)
+    embedding    = VectorField(dimensions=1536,null=True)
 
     def __str__(self):
         return self.title

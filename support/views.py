@@ -88,7 +88,6 @@ def _product_card(p: Dict[str, Any]) -> Dict[str, Any]:
         "description": p.get("description"),
     }
 
-
 @csrf_exempt
 def chat(request: HttpRequest):
     if request.method != "POST":
